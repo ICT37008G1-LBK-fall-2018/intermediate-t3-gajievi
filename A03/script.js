@@ -1,4 +1,3 @@
-
 let students = [
     {
         FirstName: 'name 1',
@@ -50,73 +49,64 @@ let students = [
     }
 
 ];
-
-
-function getStudents(studList){
-    if(Array.isArray(studList)){
-        let _table = document.createElement('table'),
-            _thead = document.createElement('thead'),
-            _tbody = document.createElement('tbody'),
-            _trHead = document.createElement('tr'),
-            _keys = Object.keys(studList[0]);
-
-            /// Head
-            _keys.forEach(key => {
-                let th = document.createElement('th');
-                th.textContent = key;
-                _trHead.appendChild(th);
-            })
-
-        studList.forEach(student => {
-            let keys = Object.keys(student),
-            _trBody = document.createElement('tr');  
-                 
-            keys.forEach(key => {
-                let  td = document.createElement('td'),
-                     grade = student['Grade']
-                
-                 td.textContent = student[key];
-
-                 if(key === 'Grade'){
-                    if(grade >= 91){
-                        td.textContent += ' A';
-                    }else if(grade >= 81 && grade < 91){
-                        td.textContent += ' B';
-                    }else if(grade >= 71 && grade < 81){
-                        td.textContent += ' C';
-                    }else if(grade >= 61 && grade < 71){
-                        td.textContent += ' D';
-                    }else if(grade >= 51 && grade < 61){
-                        td.textContent += ' E';
-                    }else if(grade >= 41 && grade < 51){
-                        td.textContent += ' FX';
-                    }else{
-                        td.textContent += ' F';
-                    }
-                }
-
-                 if(grade <= 51){
-                    _trBody.style.backgroundColor = 'red'; 
-                 }else{
-                     _trBody.style.backgroundColor = 'green';
-                 }
-                 
-
-                _trBody.appendChild(td);        
-            });
-
-
-      
-            // Tbody
-            _tbody.appendChild(_trBody);
-            _table.appendChild(_tbody);
-
-            // Thead
-            _thead.appendChild(_trHead);
-            _table.appendChild(_thead);
-        })
-
-        return document.body.appendChild(_table);
-    }
+function compare(a,b) {
+    if (a.Grade > b.Grade)
+      return -1;
+    if (a.Grade < b.Grade)
+      return 1;
+    return 0;
+  }
+  
+  
+function generate() {
+    students.sort(compare);
+    create_table(students);
 }
-getStudents(students);
+
+function create_table(list) {
+    let html = ``;
+    let simbols = ['A','B','C','D','E','F','Fx'];
+    for (let i=0;i<list.length;i++) {
+        let symbol;
+        let style;
+        if (list[i].Grade>=91) {
+            symbol = simbols[0];
+            style = 'style="color: green;"'
+          }
+          if (list[i].Grade>=81&&list[i].Grade<91) {
+            symbol = simbols[1];
+            style = 'style="color: green;"'
+          }
+          if (list[i].Grade>=71&&list[i].Grade<81) {
+            symbol = simbols[2];
+            style = 'style="color: yellow;"'
+          }
+          if (list[i].Grade>=61&&list[i].Grade<71) {
+            symbol = simbols[3];
+            style = 'style="color: yellow;"'
+          }
+          if (list[i].Grade>=51&&list[i].Grade<61) {
+            symbol = simbols[4];
+            style = 'style="color: orange;"'
+          }
+          if (list[i].Grade>=41&&list[i].Grade<51) {
+            symbol = simbols[5];
+            style = 'style="color: red;"'
+          }
+          if (list[i].Grade<41) {
+            symbol = simbols[5];
+            style = 'style="color: red;"'
+          }
+        html += 
+        `
+        <tr>
+            <td>${list[i].PersonalNumber}</td>
+            <td>${list[i].FirstName}</td>
+            <td>${list[i].LastName}</td>
+            <td>${list[i].Grade}</td>
+            <td ${style}>${symbol}</td>
+        </tr>
+        `;
+    }
+    document.getElementById("table_body").innerHTML = html;
+}
